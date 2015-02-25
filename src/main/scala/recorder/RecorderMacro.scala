@@ -16,13 +16,15 @@ class RecorderMacro[C <: Context](val context: C) {
 
     val texts = getTexts(testFun.tree)
 
+    val location = context.Expr[String](Literal(Constant(context.enclosingUnit.source.path.toString())))
+
     reify {
-        val testExpressionLineStart:Int = context.literal(texts._2).splice
+      val testExpressionLineStart:Int = context.literal(texts._2).splice
 
-        val testExpressionLineEnd:Int  = context.literal(texts._3).splice
+      val testExpressionLineEnd:Int  = context.literal(texts._3).splice
 
-        MyFunSuite.testBody(testName.splice, suite.splice, anchorRecorder.splice)(testFun.splice)(new TestContext(
-          context.literal(texts._1).splice, testExpressionLineStart, testExpressionLineEnd))
+      MyFunSuite.testBody(testName.splice, suite.splice, anchorRecorder.splice)(testFun.splice)(new TestContext(
+          context.literal(texts._1).splice, testExpressionLineStart, testExpressionLineEnd, location.splice))
     }
   }
 

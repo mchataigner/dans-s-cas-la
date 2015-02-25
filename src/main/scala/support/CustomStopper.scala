@@ -25,4 +25,7 @@ object CustomStopper extends Stopper{
     }
   }
 */
+  override def stopRequested: Boolean = ???
+
+  override def requestStop(): Unit = ???
 }

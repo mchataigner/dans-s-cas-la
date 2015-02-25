@@ -1,5 +1,4 @@
-scalaVersion := "2.10.0"
-
+scalaVersion := "2.10.4"
 
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
@@ -15,24 +14,26 @@ showSuccess := false
 
 offline := true
 
-libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.10.0"
+parallelExecution in Test := false
 
-libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.10.0"
+libraryDependencies += "org.scala-lang" % "scala-reflect" % "2.10.4"
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1"
+libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.10.4"
 
-addCommandAlias("partie1-1", "~ test-only premiers_pas")
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4"
 
-addCommandAlias("partie1-2", "~ test-only pas_suivant")
+addCommandAlias("part1_1", "~ test-only part1_1_first_steps")
 
-addCommandAlias("partie2", "~ test-only we_need_to_go_deeper")
+addCommandAlias("part1_2", "~ test-only part1_2_sequel")
 
-addCommandAlias("partie3", "~ test-only cons_et_nil")
+addCommandAlias("part2", "~ test-only part2_we_need_to_go_deeper")
 
-addCommandAlias("partie4", "~ test-only type_classes")
+addCommandAlias("part3", "~ test-only part3_cons_and_nil")
 
-addCommandAlias("partie5", "~ test-only un_sac_avec_des_items")
+addCommandAlias("part4", "~ test-only part4_type_classes")
 
-addCommandAlias("partie6", "~ test-only bonus_event_sourcing")
+addCommandAlias("part5", "~ test-only part5_the_return_of_the_bag")
+
+addCommandAlias("part6", "~ test-only part6_bonus_event_sourcing")
 
 addCommandAlias("go", "~ test-only HandsOnScala")

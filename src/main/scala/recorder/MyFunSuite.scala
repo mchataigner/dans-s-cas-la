@@ -1,6 +1,6 @@
 package recorder
 
-import org.scalatest.{Tag, FunSuite}
+import org.scalatest.{FunSpec, Tag, FunSuite}
 import java.io.File
 import collection.mutable.ArrayBuffer
 import org.scalatest.exceptions.TestFailedException
@@ -11,17 +11,16 @@ trait MyFunSuite extends FunSuite {
   implicit val anchorRecorder = new AnchorRecorder()
 
   def testPublic(testName: String)(testFun: => Unit) {
-   test(testName)(testFun)
+    test(testName)(testFun)
   }
 }
 
 object MyFunSuite  {
   def testBody(testName: String, suite: MyFunSuite, anchorRecorder: AnchorRecorder)(testFun: => Unit)(context: TestContext) {
-
     suite.testPublic(testName)({
-
       val testExpressionLineStart = context.testStartLine
       val testExpressionLineEnd = context.testEndLine
+      val path = context.location
 
       lazy val testSourceFile: Array[(String, Int)] = sourceProcessor(context.source)
 
@@ -44,8 +43,11 @@ object MyFunSuite  {
 
         val split = if (errorCtxs.isEmpty) "" else "\n...\n"
 
-
-        Some((errorCtxs ::: (split  :: testCtx(inTest.min) :: Nil)).mkString("\n"))
+        if(!inTest.isEmpty){
+          Some((errorCtxs ::: (split  :: testCtx(inTest.min) :: Nil)).mkString("\n"))
+        } else {
+          Some((errorCtxs ::: (split  :: testCtx(errorLines.min) :: Nil)).mkString("\n"))
+        }
 
       }
 
@@ -67,7 +69,7 @@ object MyFunSuite  {
           throw new MyTestFailedException(exceptionMessage(e)
             , ctx(e.failedCodeLineNumber.toList)
             , e
-            , location
+            , Some(path+":"+e.failedCodeFileName.head)
           )
 
         }
@@ -81,7 +83,7 @@ object MyFunSuite  {
               throw new MyTestPendingException(mes
                 , ctx(List(notimpl.getLineNumber))
                 , e
-                , Some(location)
+                , Some(path+":"+notimpl.getLineNumber)
               )
             case _ =>
               val notimpl = e.getStackTrace()(1)
@@ -90,7 +92,7 @@ object MyFunSuite  {
               throw new MyNotImplException(mes
                 , ctx(List(notimpl.getLineNumber, secondLineNumber))
                 , e
-                , Some(location)
+                , Some(path+":"+secondLineNumber)
               )
           }
         }
@@ -108,7 +110,7 @@ object MyFunSuite  {
           throw new MyException(mes
             , Some(myctx)
             , e
-            , location
+            , Some(path)
           )
         }
       }
@@ -162,7 +164,7 @@ object MyFunSuite  {
   }
 }
 
-class TestContext( laZysource: => String , val testStartLine:Int,val testEndLine:Int)   {
+class TestContext( laZysource: => String , val testStartLine:Int,val testEndLine:Int, val location: String)   {
   lazy val source:Array[String] = TestContext.sourceToArray(laZysource)
 }
 

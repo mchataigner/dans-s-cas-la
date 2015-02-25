@@ -1,0 +1,4 @@
+[repositories]
+  local
+  criteo-proxy: http://nexus.criteo.prod/content/groups/criteo/, [organization]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)[revision]/[type]s/[artifact](-[classifier]).[ext]
+  criteo-maven-proxy: http://nexus.criteo.prod/content/groups/criteo/
